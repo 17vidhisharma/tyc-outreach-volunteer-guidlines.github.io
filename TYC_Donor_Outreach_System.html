@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TYC Donor Outreach and Conversation System</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,Helvetica,sans-serif;background:#0f0f0f;color:#fff;padding:32px;max-width:900px;margin:0 auto}
+
+.hero{background:#111;border-radius:16px;padding:2rem;margin-bottom:1.5rem;position:relative;overflow:hidden}
+.hero-accent{position:absolute;top:0;left:0;width:6px;height:100%;background:#CC1111;border-radius:16px 0 0 16px}
+.hero-tag{font-size:10px;font-weight:bold;letter-spacing:.12em;text-transform:uppercase;color:#CC1111;margin-bottom:10px}
+.hero-title{font-size:26px;font-weight:bold;color:#fff;line-height:1.2;margin-bottom:10px}
+.hero-title span{color:#CC1111}
+.hero-sub{font-size:14px;color:#888;line-height:1.6;max-width:560px}
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:#333;border-radius:10px;overflow:hidden;margin-top:1.5rem}
+.stat{background:#1a1a1a;padding:14px 16px}
+.stat-n{font-size:24px;font-weight:bold;color:#CC1111}
+.stat-l{font-size:11px;color:#666;margin-top:2px}
+
+.tabs{display:flex;gap:0;margin-bottom:1.5rem;background:#111;border-radius:12px;padding:5px;overflow-x:auto}
+.tab{padding:9px 18px;border-radius:8px;font-size:13px;font-weight:bold;cursor:pointer;color:#666;background:none;border:none;white-space:nowrap;transition:all .15s;flex-shrink:0}
+.tab:hover{color:#ccc}
+.tab.active{background:#CC1111;color:#fff}
+
+.panel{display:none}.panel.active{display:block}
+
+.donor-type{display:flex;gap:16px;align-items:center;padding:1.25rem 1.5rem;background:#111;border-radius:12px;margin-bottom:1.5rem;border-left:4px solid #CC1111}
+.dt-icon{width:44px;height:44px;background:#CC111120;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.dt-icon i{font-size:22px;color:#CC1111}
+.dt-name{font-size:17px;font-weight:bold;color:#fff;margin-bottom:4px}
+.dt-desc{font-size:13px;color:#777;line-height:1.5}
+
+.sec-label{font-size:10px;font-weight:bold;letter-spacing:.12em;text-transform:uppercase;color:#CC1111;margin:0 0 .75rem}
+
+.flow{display:flex;flex-direction:column;gap:0;margin-bottom:1.5rem}
+.flow-step{display:flex;gap:0;position:relative}
+.flow-left{display:flex;flex-direction:column;align-items:center;width:52px;flex-shrink:0}
+.step-circle{width:36px;height:36px;background:#CC1111;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:bold;color:#fff;flex-shrink:0;z-index:1}
+.step-line{flex:1;width:2px;background:#222;min-height:16px}
+.flow-right{flex:1;padding:0 0 20px 12px}
+.step-head{font-size:13px;font-weight:bold;color:#fff;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.step-time{font-size:10px;color:#CC1111;font-weight:bold;padding:2px 8px;background:#CC111118;border-radius:20px}
+.script-box{background:#1a1a1a;border-radius:10px;padding:14px 16px;margin-bottom:8px;border-left:3px solid #CC111160}
+.script-text{font-size:13px;color:#bbb;line-height:1.7;font-style:italic}
+.tip{font-size:12px;color:#555;margin-top:4px}
+.tip b{color:#CC1111}
+
+.ask-step .flow-right{background:#CC1111;border-radius:12px;padding:12px 16px;margin-bottom:20px}
+.ask-step .step-head{color:#fff;margin-bottom:8px}
+.ask-step .script-box{background:#a00c0c;border-left-color:#fff3;border-radius:8px}
+.ask-step .script-text{color:#ffe}
+.ask-step .tip{color:#ffaaaa}
+.ask-step .tip b{color:#fff}
+.ask-circle{background:#8B0000;font-size:9px;letter-spacing:.03em}
+
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1.5rem}
+.dark-card{background:#111;border-radius:12px;padding:1.25rem}
+.card-head{font-size:13px;font-weight:bold;color:#fff;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.card-head i{color:#CC1111;font-size:16px}
+.item{padding:8px 12px;background:#1a1a1a;border-radius:8px;margin-bottom:5px;font-size:13px;color:#999;line-height:1.5}
+.item b{color:#ddd}
+.item:last-child{margin-bottom:0}
+.obj{padding:10px 14px;border-radius:8px;margin-bottom:6px;background:#1a1a1a}
+.obj-q{font-size:12px;color:#CC1111;margin-bottom:5px;font-style:italic}
+.obj-a{font-size:13px;color:#ccc;line-height:1.5}
+
+.tier-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:1.5rem}
+.tier{padding:1rem 1.25rem;background:#111;border-radius:12px;position:relative;overflow:hidden}
+.tier-accent{position:absolute;top:0;left:0;right:0;height:3px}
+.t1 .tier-accent{background:#CC1111}.t2 .tier-accent{background:#e85530}
+.t3 .tier-accent{background:#f0a500}.t4 .tier-accent{background:#22a86b}
+.tier-amt{font-size:22px;font-weight:bold;color:#fff;margin:8px 0 4px}
+.tier-name{font-size:10px;font-weight:bold;color:#CC1111;margin-bottom:6px;text-transform:uppercase;letter-spacing:.06em;margin-top:10px}
+.tier-perks{font-size:12px;color:#666;line-height:1.6}
+
+.formula-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:1.5rem}
+.formula-card{background:#111;border-radius:12px;padding:1rem}
+.f-day{font-size:10px;font-weight:bold;color:#CC1111;letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px}
+.f-type{font-size:14px;font-weight:bold;color:#fff;margin-bottom:6px}
+.f-copy{font-size:12px;color:#666;line-height:1.5;font-style:italic;border-left:2px solid #CC111140;padding-left:10px}
+
+.rules-row{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:1.5rem}
+.rule-card{background:#111;border-radius:10px;padding:12px;text-align:center}
+.rule-num{font-size:24px;font-weight:bold;color:#CC1111;display:block;margin-bottom:6px}
+.rule-title{font-size:12px;font-weight:bold;color:#ddd;margin-bottom:3px;display:block}
+.rule-desc{font-size:11px;color:#555;line-height:1.4}
+
+.follow-row{display:flex;gap:0;margin-bottom:1.5rem;background:#111;border-radius:12px;overflow:hidden}
+.follow-step{flex:1;padding:1rem;border-right:1px solid #222;text-align:center}
+.follow-step:last-child{border-right:none}
+.f-circle{font-size:18px;font-weight:bold;color:#CC1111;margin-bottom:5px}
+.f-title{font-size:12px;font-weight:bold;color:#ddd;margin-bottom:4px}
+.f-note{font-size:11px;color:#555;line-height:1.4}
+
+.stat-quick{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:1rem}
+.sq{background:#1a1a1a;border-radius:8px;padding:10px;text-align:center}
+.sq-n{font-size:18px;font-weight:bold;color:#CC1111}
+.sq-l{font-size:10px;color:#555;margin-top:2px;line-height:1.3}
+
+.channel-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:1.5rem}
+.ch{background:#111;border-radius:12px;padding:1rem;text-align:center}
+.ch i{font-size:24px;color:#CC1111;display:block;margin-bottom:8px}
+.ch-name{font-size:13px;font-weight:bold;color:#fff;margin-bottom:4px}
+.ch-tag{display:inline-block;font-size:10px;color:#CC1111;background:#CC111118;padding:2px 8px;border-radius:20px;margin-bottom:6px}
+.ch-note{font-size:11px;color:#666;line-height:1.4}
+
+.footer{text-align:center;font-size:11px;color:#444;margin-top:2rem;padding:1rem;background:#111;border-radius:10px}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-accent"></div>
+  <p class="hero-tag">TYC Leadership Resource</p>
+  <p class="hero-title">Stop asking.<br><span>Start converting.</span></p>
+  <p class="hero-sub">Every conversation, channel, and script your leadership needs to turn community relationships into real donations. Pick a donor type and follow the flow.</p>
+  <div class="stats-row">
+    <div class="stat"><p class="stat-n">25+</p><p class="stat-l">Active volunteers</p></div>
+    <div class="stat"><p class="stat-n">28+</p><p class="stat-l">Youth served</p></div>
+    <div class="stat"><p class="stat-n">19</p><p class="stat-l">Community partners</p></div>
+    <div class="stat"><p class="stat-n">$0</p><p class="stat-l">Paid staff</p></div>
+  </div>
+</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="show('ind',this)">Individual donors</button>
+  <button class="tab" onclick="show('biz',this)">Local businesses</button>
+  <button class="tab" onclick="show('fam',this)">Families</button>
+  <button class="tab" onclick="show('online',this)">Online and social</button>
+  <button class="tab" onclick="show('rules',this)">Ground rules</button>
+</div>
+
+<!-- INDIVIDUAL -->
+<div class="panel active" id="panel-ind">
+  <div class="donor-type">
+    <div class="dt-icon"><i class="ti ti-user"></i></div>
+    <div><p class="dt-name">Individual donors</p><p class="dt-desc">Community members, faith leaders, educators. They give from personal values, not spreadsheets. Lead with one story. Then bring the numbers.</p></div>
+  </div>
+  <p class="sec-label">The conversation flow</p>
+  <div class="flow">
+    <div class="flow-step">
+      <div class="flow-left"><div class="step-circle">1</div><div class="step-line"></div></div>
+      <div class="flow-right">
+        <p class="step-head">Connect personally <span class="step-time">30 sec</span></p>
+        <div class="script-box"><p class="script-text">"Hey [name], I volunteer with The Youth Complex here in Manchester. I know you care about kids in this community and I just wanted to share something real with you."</p></div>
+        <p class="tip"><b>Tip:</b> Use their name. Reference something specific you know about them. No pitch yet.</p>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-left"><div class="step-circle">2</div><div class="step-line"></div></div>
+      <div class="flow-right">
+        <p class="step-head">Tell one story <span class="step-time">90 sec</span></p>
+        <div class="script-box"><p class="script-text">"We have a kid who came in completely shut down. By month three he was leading our youth council. That is what we do. We give young people a space that actually sees them."</p></div>
+        <p class="tip"><b>Tip:</b> One specific, real story beats any statistic. Pick a youth you have actually seen change.</p>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-left"><div class="step-circle">3</div><div class="step-line"></div></div>
+      <div class="flow-right">
+        <p class="step-head">Drop the numbers <span class="step-time">30 sec</span></p>
+        <div class="script-box"><p class="script-text">"Right now we have 25 plus volunteers, 28 youth enrolled, 19 community partners. Zero paid staff. Every dollar goes straight to programming."</p></div>
+        <p class="tip"><b>Tip:</b> Numbers land after the story. Now they carry real weight.</p>
+      </div>
+    </div>
+    <div class="flow-step ask-step">
+      <div class="flow-left"><div class="step-circle ask-circle">ASK</div><div class="step-line"></div></div>
+      <div class="flow-right">
+        <p class="step-head">Make the specific ask</p>
+        <div class="script-box"><p class="script-text">"We are trying to raise $[X] for [specific thing]. Would you consider a gift of $[amount]? Even $50 covers a full month of supplies for one youth."</p></div>
+        <p class="tip"><b>Rule:</b> Tie every dollar to something concrete. Never say "anything helps."</p>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-left"><div class="step-circle">5</div></div>
+      <div class="flow-right">
+        <p class="step-head">Lock in a next step <span class="step-time">Before you leave</span></p>
+        <div class="script-box"><p class="script-text">"No pressure at all. Can I send you something to look over? And would it be okay if I followed up in a week?"</p></div>
+        <p class="tip"><b>Tip:</b> A maybe later with no follow-up date is a no. Get a specific day before you leave.</p>
+      </div>
+    </div>
+  </div>
+  <div class="two-col">
+    <div class="dark-card">
+      <p class="card-head"><i class="ti ti-message-circle"></i> Key talking points</p>
+      <div class="item"><b>All volunteer.</b> 100% of donations go to programming</div>
+      <div class="item"><b>Local.</b> Manchester youth, Manchester community</div>
+      <div class="item"><b>Fast growth.</b> Zero to 25 volunteers in 8 months</div>
+      <div class="item"><b>Proven model.</b> Mentorship, arts, and a safe space</div>
+      <div class="item"><b>Tax deductible.</b> 501(c)(3), EIN 33-1885285</div>
+    </div>
+    <div class="dark-card">
+      <p class="card-head"><i class="ti ti-shield"></i> When they push back</p>
+      <div class="obj"><p class="obj-q">"I do not know much about you."</p><p class="obj-a">That is exactly why I am here. Let me show you what we built in under a year.</p></div>
+      <div class="obj"><p class="obj-q">"Money is tight right now."</p><p class="obj-a">Completely understood. Would you share us with one person who might be able to help?</p></div>
+      <div class="obj"><p class="obj-q">"Let me think about it."</p><p class="obj-a">Of course. Can I follow up Thursday? I will send something over tonight.</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- BUSINESS -->
+<div class="panel" id="panel-biz">
+  <div class="donor-type">
+    <div class="dt-icon"><i class="ti ti-building-store"></i></div>
+    <div><p class="dt-name">Local businesses</p><p class="dt-desc">Restaurants, shops, law firms, banks, real estate. They give for visibility and community reputation. Frame this as a partnership, not a charity ask.</p></div>
+  </div>
+  <p class="sec-label">Sponsorship tiers</p>
+  <div class="tier-grid">
+    <div class="tier t1"><div class="tier-accent"></div><p class="tier-name">Community Friend</p><p class="tier-amt">$250</p><p class="tier-perks">Logo on digital materials, social media thank-you post</p></div>
+    <div class="tier t2"><div class="tier-accent"></div><p class="tier-name">Program Partner</p><p class="tier-amt">$500</p><p class="tier-perks">Everything above, plus dedicated social feature post</p></div>
+    <div class="tier t3"><div class="tier-accent"></div><p class="tier-name">Youth Champion</p><p class="tier-amt">$1,000</p><p class="tier-perks">Everything above, plus event signage and verbal recognition</p></div>
+    <div class="tier t4"><div class="tier-accent"></div><p class="tier-name">Founding Sponsor</p><p class="tier-amt">$2,500+</p><p class="tier-perks">Named program support, featured across all channels</p></div>
+  </div>
+  <p class="sec-label">The conversation flow</p>
+  <div class="flow">
+    <div class="flow-step">
+      <div class="flow-left"><div class="step-circle">1</div><div class="step-line"></div></div>
+      <div class="flow-right">
+        <p class="step-head">Lead with their reputation <span class="step-time">30 sec</span></p>
+        <div class="script-box"><p class="script-text">"Hi, I am [name] from The Youth Complex. I know [business name] is really rooted in this community and I wanted to talk about something that could be great for both of us."</p></div>
+        <p class="tip"><b>Tip:</b> Businesses respond to reputation, not sympathy. Never open with "we need help."</p>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-left"><div class="step-circle">2</div><div class="step-line"></div></div>
+      <div class="flow-right">
+        <p class="step-head">Show them their audience <span class="step-time">45 sec</span></p>
+        <div class="script-box"><p class="script-text">"We serve 28 youth and their families, work with 19 community partners, and have 25 active volunteers. These are all Manchester residents. Our events bring in parents, community members, and local leaders."</p></div>
+        <p class="tip"><b>Tip:</b> This is their customer base. Help them see it clearly.</p>
+      </div>
+    </div>
+    <div class="flow-step ask-step">
+      <div class="flow-left"><div class="step-circle ask-circle">ASK</div><div class="step-line"></div></div>
+      <div class="flow-right">
+        <p class="step-head">Offer a specific tier</p>
+        <div class="script-box"><p class="script-text">"We would love to list [business name] as a community sponsor. A sponsorship of $[amount] would fund [specific thing] and you would be featured across all our materials and events."</p></div>
+        <p class="tip"><b>Rule:</b> Give them a menu with named tiers. Businesses prefer structured options.</p>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-left"><div class="step-circle">4</div><div class="step-line"></div></div>
+      <div class="flow-right">
+        <p class="step-head">Mention the tax benefit briefly</p>
+        <div class="script-box"><p class="script-text">"We are a registered 501(c)(3), EIN 33-1885285, so this is fully tax deductible. We will send a donation receipt right away."</p></div>
+        <p class="tip"><b>Tip:</b> Say it once, do not oversell it.</p>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-left"><div class="step-circle">5</div></div>
+      <div class="flow-right">
+        <p class="step-head">Always have a smaller ask ready</p>
+        <div class="script-box"><p class="script-text">"If a donation does not work right now, would you be open to hosting a fundraiser night, or letting us put a flyer in your window?"</p></div>
+        <p class="tip"><b>Tip:</b> A flyer becomes a relationship. A relationship becomes a donation.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FAMILIES -->
+<div class="panel" id="panel-fam">
+  <div class="donor-type">
+    <div class="dt-icon"><i class="ti ti-heart"></i></div>
+    <div><p class="dt-name">Families and parents</p><p class="dt-desc">Parents of youth TYC serves. Your most loyal donors. They already believe. Ask for recurring gifts AND referrals. Both matter equally.</p></div>
+  </div>
+  <p class="sec-label">Recurring gift ladder</p>
+  <div class="tier-grid">
+    <div class="tier t1"><div class="tier-accent"></div><p class="tier-name">Monthly</p><p class="tier-amt">$10 / mo</p><p class="tier-perks">Supplies for one youth per month</p></div>
+    <div class="tier t2"><div class="tier-accent"></div><p class="tier-name">Monthly</p><p class="tier-amt">$25 / mo</p><p class="tier-perks">Weekly program support for the team</p></div>
+    <div class="tier t3"><div class="tier-accent"></div><p class="tier-name">Monthly</p><p class="tier-amt">$50 / mo</p><p class="tier-perks">Full monthly programming for one kid</p></div>
+    <div class="tier t4"><div class="tier-accent"></div><p class="tier-name">Monthly</p><p class="tier-amt">$100 / mo</p><p class="tier-perks">Youth Center operational costs covered</p></div>
+  </div>
+  <p class="sec-label">The conversation flow</p>
+  <div class="flow">
+    <div class="flow-step">
+      <div class="flow-left"><div class="step-circle">1</div><div class="step-line"></div></div>
+      <div class="flow-right">
+        <p class="step-head">Acknowledge what they already give</p>
+        <div class="script-box"><p class="script-text">"You have already been one of our biggest supporters just by trusting us with your kid. That means everything. I wanted to talk with you about how you might help us reach more families like yours."</p></div>
+        <p class="tip"><b>Tip:</b> Never cold pitch a warm relationship. Recognize what they have already contributed first.</p>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-left"><div class="step-circle">2</div><div class="step-line"></div></div>
+      <div class="flow-right">
+        <p class="step-head">Show them the bigger picture</p>
+        <div class="script-box"><p class="script-text">"Right now we have 28 youth enrolled. We know there are families in Manchester who need this and just do not know we exist yet. To grow, we need the community behind us."</p></div>
+        <p class="tip"><b>Tip:</b> Parents who have benefited become ambassadors. Plant that seed here.</p>
+      </div>
+    </div>
+    <div class="flow-step ask-step">
+      <div class="flow-left"><div class="step-circle ask-circle">ASK</div></div>
+      <div class="flow-right">
+        <p class="step-head">The double ask: money AND referrals</p>
+        <div class="script-box"><p class="script-text">"Would you consider a small monthly gift? Even $10 or $25 a month adds up fast when all of you are together. And just as valuable: is there another family you know who could use what we offer?"</p></div>
+        <p class="tip"><b>Rule:</b> Recurring $10/month = $120/year. One referral can become a long-term donor. Ask for both every time.</p>
+      </div>
+    </div>
+  </div>
+  <div class="two-col">
+    <div class="dark-card">
+      <p class="card-head"><i class="ti ti-users"></i> Word of mouth strategy</p>
+      <div class="item">Ask them to share one TYC post per month</div>
+      <div class="item">Give them 2 to 3 flyers to hand to other parents</div>
+      <div class="item">Invite them to bring someone to the next event</div>
+      <div class="item">Feature a parent quote on social with their permission</div>
+    </div>
+    <div class="dark-card">
+      <p class="card-head"><i class="ti ti-repeat"></i> Make giving frictionless</p>
+      <p style="font-size:13px;color:#888;line-height:1.65;margin-bottom:12px">Send a donation link they can set up in 2 minutes. Handle all the follow-up yourself so they never feel like they are selling anything.</p>
+      <p style="font-size:13px;color:#ccc;line-height:1.6">Recurring donors are 3 to 5x more valuable over time than one-time givers. Always lead with the monthly option first.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ONLINE -->
+<div class="panel" id="panel-online">
+  <div class="donor-type">
+    <div class="dt-icon"><i class="ti ti-device-mobile"></i></div>
+    <div><p class="dt-name">Online and social donors</p><p class="dt-desc">Instagram followers, Facebook community, email list. They give to moments, not campaigns. Create urgency with specific, time-bound needs.</p></div>
+  </div>
+  <p class="sec-label">The 3-post formula: rotate every week</p>
+  <div class="formula-grid">
+    <div class="formula-card">
+      <p class="f-day">Monday</p><p class="f-type">The impact post</p>
+      <p class="f-copy">"This week [X] youth showed up to the Youth Complex. One came in stressed about school and left with a plan, a mentor, and a smile. That is what your support makes possible. Link in bio."</p>
+    </div>
+    <div class="formula-card">
+      <p class="f-day">Wednesday</p><p class="f-type">Behind the scenes</p>
+      <p class="f-copy">"Meet [volunteer name]. She gives [X] hours a week to TYC completely for free. She is one of 25 volunteers making this happen. Want to join us or support us? DM us or link in bio."</p>
+    </div>
+    <div class="formula-card">
+      <p class="f-day">Friday</p><p class="f-type">The specific ask</p>
+      <p class="f-copy">"We need $[X] by [date] for [specific thing]. We are at $[Y] so far. If 10 people give $[Z] each, we hit it. Can you be one of them? Link in bio, takes 2 minutes."</p>
+    </div>
+  </div>
+  <div class="two-col">
+    <div class="dark-card">
+      <p class="card-head"><i class="ti ti-trending-up"></i> What actually converts online</p>
+      <div class="item"><b>Video.</b> 30-second clips outperform photos by 3 to 5x</div>
+      <div class="item"><b>Progress bars.</b> "We are 60% to our goal" drives action fast</div>
+      <div class="item"><b>Real faces.</b> Named youth with permission, no stock images</div>
+      <div class="item"><b>Countdown.</b> "3 days left" can double your click rate</div>
+      <div class="item"><b>Reply to every comment.</b> Engagement signals trust to new visitors</div>
+    </div>
+    <div class="dark-card">
+      <p class="card-head"><i class="ti ti-mail"></i> Email follow-up sequence</p>
+      <div class="item"><b>Day 1.</b> Thank you and what their support does specifically</div>
+      <div class="item"><b>Day 7.</b> Impact update, show the money at work</div>
+      <div class="item"><b>Day 30.</b> Story of one youth, brief and real</div>
+      <div class="item"><b>Day 60.</b> Soft ask to upgrade to recurring or share with a friend</div>
+    </div>
+  </div>
+</div>
+
+<!-- GROUND RULES -->
+<div class="panel" id="panel-rules">
+  <p class="sec-label">The follow-up timeline: most donations happen on contact 4 to 7</p>
+  <div class="follow-row">
+    <div class="follow-step"><p class="f-circle">D0</p><p class="f-title">First contact</p><p class="f-note">Call, DM, or email</p></div>
+    <div class="follow-step"><p class="f-circle">D3</p><p class="f-title">Follow up</p><p class="f-note">Different channel if no response</p></div>
+    <div class="follow-step"><p class="f-circle">D10</p><p class="f-title">Soft touch</p><p class="f-note">Share a story or update</p></div>
+    <div class="follow-step"><p class="f-circle">D21</p><p class="f-title">Final ask</p><p class="f-note">Specific deadline attached</p></div>
+    <div class="follow-step"><p class="f-circle">D30</p><p class="f-title">Newsletter</p><p class="f-note">Move to long-term nurture list</p></div>
+  </div>
+  <p class="sec-label">Non-negotiable rules for every single conversation</p>
+  <div class="rules-row">
+    <div class="rule-card"><span class="rule-num">01</span><span class="rule-title">Story first</span><p class="rule-desc">Lead with one real story, never a stat</p></div>
+    <div class="rule-card"><span class="rule-num">02</span><span class="rule-title">Specific ask</span><p class="rule-desc">Never say "anything helps"</p></div>
+    <div class="rule-card"><span class="rule-num">03</span><span class="rule-title">Next step</span><p class="rule-desc">Leave with a date, not a maybe</p></div>
+    <div class="rule-card"><span class="rule-num">04</span><span class="rule-title">24-hour thank you</span><p class="rule-desc">Always, without exception</p></div>
+    <div class="rule-card"><span class="rule-num">05</span><span class="rule-title">Inspire, never guilt</span><p class="rule-desc">Pull them in, do not push them</p></div>
+  </div>
+  <p class="sec-label">Outreach channels: use in combination</p>
+  <div class="channel-grid">
+    <div class="ch"><i class="ti ti-phone-call"></i><p class="ch-name">Direct call</p><p class="ch-tag">Highest trust</p><p class="ch-note">Best for warm leads</p></div>
+    <div class="ch"><i class="ti ti-building-community"></i><p class="ch-name">In person</p><p class="ch-tag">Highest conversion</p><p class="ch-note">Events and community</p></div>
+    <div class="ch"><i class="ti ti-brand-instagram"></i><p class="ch-name">Instagram</p><p class="ch-tag">Youth and volunteers</p><p class="ch-note">Stories and reels</p></div>
+    <div class="ch"><i class="ti ti-brand-facebook"></i><p class="ch-name">Facebook</p><p class="ch-tag">Parents</p><p class="ch-note">Groups and shares</p></div>
+    <div class="ch"><i class="ti ti-mail"></i><p class="ch-name">Email</p><p class="ch-tag">Businesses</p><p class="ch-note">Formal outreach</p></div>
+    <div class="ch"><i class="ti ti-message"></i><p class="ch-name">Text</p><p class="ch-tag">Warm contacts only</p><p class="ch-note">Never cold text</p></div>
+    <div class="ch"><i class="ti ti-brand-linkedin"></i><p class="ch-name">LinkedIn</p><p class="ch-tag">Corporate sponsors</p><p class="ch-note">Connect first</p></div>
+    <div class="ch"><i class="ti ti-calendar-event"></i><p class="ch-name">Events</p><p class="ch-tag">Cultivation</p><p class="ch-note">Relationships first</p></div>
+  </div>
+  <p class="sec-label">Quick stats: memorize these before any conversation</p>
+  <div class="stat-quick">
+    <div class="sq"><p class="sq-n">25+</p><p class="sq-l">Active volunteers</p></div>
+    <div class="sq"><p class="sq-n">28+</p><p class="sq-l">Youth served</p></div>
+    <div class="sq"><p class="sq-n">19</p><p class="sq-l">Community partners</p></div>
+    <div class="sq"><p class="sq-n">$0</p><p class="sq-l">Paid staff</p></div>
+    <div class="sq"><p class="sq-n">501(c)(3)</p><p class="sq-l">EIN 33-1885285</p></div>
+  </div>
+</div>
+
+<div class="footer">theyouthcomplex.org &nbsp;|&nbsp; tyc.theyouthcomplex@gmail.com &nbsp;|&nbsp; 603.206.9539 &nbsp;|&nbsp; Prepared by Vidhi Sharma, Growth and Impact Manager</div>
+
+<script>
+function show(id,btn){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
+</body>
+</html>
